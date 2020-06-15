@@ -2,16 +2,17 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Doctor extends Authenticatable
 {
     use Notifiable;
 
+    protected $guard = 'doctor';
+
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','specialty_id'
     ];
 
     protected $hidden = [
