@@ -2,28 +2,30 @@
 
 namespace App;
 
+use App\Scopes\DoctorScope;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Doctor extends Authenticatable
+class Doctor extends User
 {
     use Notifiable;
+    protected $primaryKey='user_id';
 
-    protected $guard = 'doctor';
+//    protected static function boot()
+//    {
+//        parent::boot();
+//
+//        static::addGlobalScope(new DoctorScope);
+//    }
 
     protected $fillable = [
-        'name', 'email', 'password','specialty_id'
-    ];
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+        'specialty_id'
     ];
 
     public function appointments(){
         return $this->hasMany(Appointment::class);
+    }
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
     }
 }

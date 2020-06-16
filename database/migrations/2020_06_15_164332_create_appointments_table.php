@@ -15,8 +15,8 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->unsignedBigInteger('patient_id')->nullable();
+            $table->foreign('patient_id')->references('id')->on('patients')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->unsignedBigInteger('pain_id')->nullable();
             $table->foreign('pain_id')->references('id')->on('pains')
@@ -25,7 +25,7 @@ class CreateAppointmentsTable extends Migration
             $table->foreign('doctor_id')->references('id')->on('doctors')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->unsignedBigInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('admins')
+            $table->foreign('admin_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->time('time')->nullable();
             $table->date('date')->nullable();

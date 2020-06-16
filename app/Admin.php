@@ -5,24 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Scopes\AdminScope;
 
-class Admin extends Authenticatable
+class Admin extends User
 {
     use Notifiable;
-
-    protected $guard = 'admin';
-
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $table='users';
+   // protected $guard = 'admin';
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new AdminScope);
+    }
 
     public function appointments(){
         return $this->hasMany(Appointment::class);

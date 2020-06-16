@@ -15,14 +15,11 @@ class CreateDoctorsTable extends Migration
     {
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
             $table->unsignedBigInteger('specialty_id')->nullable();
             $table->foreign('specialty_id')->references('id')->on('specialties')
+                ->onUpdate('cascade')->onDelete('set null');
+             $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
