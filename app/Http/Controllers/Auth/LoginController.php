@@ -8,7 +8,6 @@ use App\Sd;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -51,16 +50,12 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, User $user)
     {
-        if ($user->user_type->role==Sd::$doctorRole) {
-            return redirect('/home')->with('message', 'welcome doctor '.$user->name);
-
-        }
-        else if ($user->user_type->role==Sd::$adminRole) {
-            return redirect('/home')->with('message', 'welcome Admin '.$user->name);
-
-        }
-        else  {
-            return redirect('/home')->with('message', 'welcome User '.$user->name);
+        if ($user->hasType(Sd::$doctorRole)) {
+            return redirect('/notifications')->with('message', 'welcome doctor ' . $user->name);
+        } else if ($user->hasType(Sd::$adminRole)) {
+            return redirect('/admin')->with('message', 'welcome Admin ' . $user->name);
+        } else {
+            return redirect('/home')->with('message', 'welcome User ' . $user->name);
 
         }
 

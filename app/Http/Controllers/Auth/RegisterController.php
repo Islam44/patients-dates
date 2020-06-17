@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Admin;
 use App\Doctor;
 use App\Http\Controllers\Controller;
-use App\Pain;
+use App\Http\Requests\CompleteRegisterRequest;
+use App\Http\Requests\CreateAdminRequest;
+use App\Http\Requests\CreateDoctorRequest;
 use App\Patient;
-use App\Providers\RouteServiceProvider;
 use App\Sd;
 use App\Specialty;
 use App\User;
@@ -78,38 +79,34 @@ class RegisterController extends Controller
         return view('auth.register', ['url' => 'doctor','specialties'=>$specialties]);
     }
 
-    protected function createAdmin(Request $request)
+    protected function createAdmin(CreateAdminRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255','unique:users'],
-            'email' => ['string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-        $type=User_type::where('role','=',Sd::$adminRole)->first();
+        $type = User_type::where('role', '=', Sd::$adminRole)->first();
         $admin = Admin::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'type_id'=>$type->id
+            'type_id' => $type->id
         ]);
 
         return redirect()->intended('/login');
     }
 
-    protected function createDoctor(Request $request)
+    protected function createDoctor(CreateDoctorRequest $request)
     {
-        $this->validator($request->all())->validate();
-        $type=User_type::where('role','=',Sd::$doctorRole)->first();
-            $user= User::create([
-                'name' => $request['name'],
+        DB::transaction(function () use ($request) {
+            $type = User_type::where('role', '=', Sd::$doctorRole)->first();
+            $user = User::create([
+                'name' => 'Dr/' . $request['name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
-                'type_id'=>$type->id
+                'type_id' => $type->id
             ]);
-            $doctor = Doctor::create([
-                'specialty_id'=>$request['specialty'],
-                'user_id'=>$user->id
+            Doctor::create([
+                'specialty_id' => $request['specialty'],
+                'user_id' => $user->id
             ]);
+        });
         return redirect()->intended('/login');
     }
 
@@ -135,21 +132,24 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
         return redirect($this->redirectPath().'/'.$user->id);
     }
-    public function showCompleteRegisterForm(User $user){
-        $pains=Pain::all();
-        return view('auth.complete-register')->with(['user'=>$user,'pains'=>$pains]);
+
+    public function showCompleteRegisterForm(User $user)
+    {
+        return view('auth.complete-register')->with(['user' => $user]);
     }
-    public function completeRegister(Request $request,User $user){
-        $user->update(['email'=>$request->email]);
-        $patient=Patient::create([
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'mobile'=>$request->mobile,
-            'country'=>$request->country,
-            'dob'=>$request->dob,
-            'job'=>$request->job,
-            'gender'=>$request->gender,
-            'user_id'=>$user->id
+
+    public function completeRegister(CompleteRegisterRequest $request, User $user)
+    {
+        $user->update(['email' => $request->email]);
+        Patient::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'mobile' => $request->mobile,
+            'country' => $request->country,
+            'dob' => $request->dob,
+            'job' => $request->job,
+            'gender' => $request->gender,
+            'user_id' => $user->id
         ]);
         Auth::login($user);
         return redirect('/home')->with('message','your form added success');

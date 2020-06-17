@@ -2,16 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use App\Scopes\AdminScope;
+use Illuminate\Notifications\Notifiable;
 
 class Admin extends User
 {
     use Notifiable;
-    protected $table='users';
-   // protected $guard = 'admin';
+    protected $primaryKey = 'id';
+    protected $table = 'users';
+
     protected static function boot()
     {
         parent::boot();

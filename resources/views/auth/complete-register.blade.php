@@ -98,17 +98,6 @@
                                                     <input id="dob" type="date" class="form-control @error('dob') is-invalid @enderror" name="dob" value="{{ old('dob') }}" required autocomplete="dob" autofocus>
                                                 </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="gender" class="col-md-4 col-form-label text-md-right">Your Pain</label>
-                                            <div class="col-md-6">
-                                                <select class="form-control " id="pains" name="pain">
-                                                    <option value="">Select Your Pain </option>
-                                                    @foreach($pains as $pain)
-                                                    <option value="{{$pain->id}}">{{$pain->description}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div class="form-group row mb-0">
                                             <div class="col-md-6 offset-md-4">
                                                 <button type="submit" class="btn btn-primary">
