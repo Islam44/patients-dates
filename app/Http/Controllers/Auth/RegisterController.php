@@ -89,7 +89,7 @@ class RegisterController extends Controller
             'type_id' => $type->id
         ]);
 
-        return redirect()->intended('/login');
+        return redirect()->intended('/')->with('Admin Created Successfully');
     }
 
     protected function createDoctor(CreateDoctorRequest $request)

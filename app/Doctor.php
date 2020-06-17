@@ -13,7 +13,7 @@ class Doctor extends User
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->hasMany(Appointment::class,'doctor_id');
     }
 
     public function user()

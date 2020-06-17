@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
-    protected $fillable = ['patient_id', 'pain_id', 'doctor_id', 'time', 'date', 'admin_id'];
+    protected $fillable = ['patient_id', 'pain_id', 'doctor_id', 'time', 'date', 'admin_id','accept_by_doctor','accept_by_user'];
 
     //
     public function admin()
@@ -31,7 +31,6 @@ class Appointment extends Model
 
     public function scopeAppointment($query, $statue)
     {
-        return $query->where('accept_by_doctor', '=', $statue)->where('accept_by_user', '=', $statue);
-
+        return $query->where('accept_by_doctor', '=', $statue)->Orwhere('accept_by_user', '=', $statue);
     }
 }

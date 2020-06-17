@@ -10,13 +10,13 @@
                 <h4 class="bd-toc-link">Appointment Management</h4>
 
                 <li>
+                    <a href="/admin/non_ready">NotReady Appointments</a>
+                </li>
+                <li>
                     <a href="/admin/waiting">Waiting Appointments</a>
                 </li>
                 <li>
                     <a href="/admin/reject">Rejected Appointments</a>
-                </li>
-                <li>
-                    <a href="/admin/accept">Accepted Appointments</a>
                 </li>
 
             </ul>
@@ -49,7 +49,7 @@
                             @METHOD('PUT')
                     <td>{{$appointment->patient->first_name}} {{$appointment->patient->last_name}}</td>
                     <td>{{$appointment->pain->description}}</td>
-                    <td>   <select class="form-control " id="painsList" name="doctor">
+                    <td>   <select id="doctor" class="form-control @error('doctor') is-invalid @enderror" id="painsList" name="doctor">
                             @if($appointment->doctor_id)
                                 <option value="{{$appointment->doctor_id}}">{{$appointment->doctor->user->name}}</option>
                             @else
@@ -58,12 +58,36 @@
                             @foreach($appointment->pain->specialty->doctors as $doctor)
                                 <option value="{{$doctor->user_id}}">{{$doctor->user->name}}</option>
                             @endforeach
-                        </select></td>
-                    <td><input type="time" name="time" value="{{$appointment->time}}"></td>
-                    <td><input type="date" name="date" value="{{$appointment->date}}"></td>
-                       <td>{{$appointment->accept_by_doctor}}</td>
+                        </select>
+                        @error('doctor')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+                    </td>
+                    <td>
+                        <input id="time" value="{{$appointment->time}}" type="time" class="form-control @error('time') is-invalid @enderror" name="time">
+                        @error('time')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+                    </td>
+                    <td>
+                        <input id="date" value="{{$appointment->date}}" type="date" class="form-control @error('date') is-invalid @enderror" name="date">
+                        @error('date')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+                    </td>
+                            <td>{{$appointment->accept_by_doctor}}</td>
                             <td>{{$appointment->accept_by_user}}</td>
-                    <td> <button type="submit" class="btn btn-primary">Add Appointment</button></td>
+                            @if($status=='reject')
+                             <td> <button type="submit" class="btn btn-primary">Update Appointment</button></td>
+                            @else
+                            <td> <button type="submit" class="btn btn-primary">Add Appointment</button></td>
+                                @endif
                         </form>
                     </tr>
                     </tr>

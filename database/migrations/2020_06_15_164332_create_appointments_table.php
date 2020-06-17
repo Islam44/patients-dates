@@ -29,8 +29,8 @@ class CreateAppointmentsTable extends Migration
                 ->onUpdate('cascade')->onDelete('set null');
             $table->time('time')->nullable();
             $table->date('date')->nullable();
-            $table->enum('accept_by_doctor',['waiting','accept','reject'])->default('waiting');
-            $table->enum('accept_by_user',['waiting','accept','reject'])->default('waiting');
+            $table->enum('accept_by_doctor',['non_ready','waiting','accept','reject'])->default('non_ready');
+            $table->enum('accept_by_user',['non_ready','waiting','accept','reject'])->default('non_ready');
             $table->timestamps();
         });
     }

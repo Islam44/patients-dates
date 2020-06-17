@@ -61,6 +61,18 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+            .alert {
+                position: relative;
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border: 1px solid transparent;
+                border-radius: 0.25rem;
+            }
+            .alert-success {
+                color: #155724;
+                background-color: #d4edda;
+                border-color: #c3e6cb;
+            }
         </style>
     </head>
     <body>
@@ -75,11 +87,20 @@
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}">Register</a>
                         @endif
+                        <a href="/register/doctor">Register As Doctor</a>
+
                     @endauth
+
                 </div>
             @endif
-
             <div class="content">
+                <div>
+                    @if (session('message'))
+                        <div class="alert alert-success " role="alert">
+                            {{ session('message') }}
+                        </div>
+                    @endif
+                </div>
                 <div class="title m-b-md">
                     Welcome To Medicine Center
                 </div>
@@ -87,3 +108,4 @@
         </div>
     </body>
 </html>
+

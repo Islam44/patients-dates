@@ -9,4 +9,5 @@ class Sd
     public static $accept = 'accept';
     public static $reject = 'reject';
     public static $waiting = 'waiting';
+    public static $nonReady = 'non_ready';
 }

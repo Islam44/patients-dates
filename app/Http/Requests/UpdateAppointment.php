@@ -25,8 +25,8 @@ class UpdateAppointment extends FormRequest
     {
         return [
             'doctor'=>'required',
-            'time'=>'required',
-            'date'=>'required|date|after:now'
+            'time'=>'required|after:now',
+            'date'=>'required|date|before:tomorrow'
         ];
     }
 }

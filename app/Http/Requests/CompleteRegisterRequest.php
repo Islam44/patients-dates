@@ -13,7 +13,7 @@ class CompleteRegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,7 +27,7 @@ class CompleteRegisterRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'string|email|max:255|unique:users',
-            'mobile'=> 'required|max:11',
+            'mobile'=> 'required|min:11|numeric',
             'gender'=> 'required',
             'dob'=> 'required'
         ];

@@ -29,17 +29,17 @@ class User extends Authenticatable
 
     public function doctor()
     {
-        $this->hasOne(Doctor::class);
+        return $this->hasOne(Doctor::class);
     }
 
     public function patient()
     {
-        $this->hasOne(Patient::class);
+        return $this->hasOne(Patient::class);
     }
 
     public function admin()
     {
-        $this->hasOne(Admin::class);
+        return  $this->hasOne(Admin::class);
     }
 
     public function user_type()

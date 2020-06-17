@@ -13,7 +13,6 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     public function index()
@@ -31,8 +30,15 @@ class HomeController extends Controller
 
     public function notifications()
     {
+        $authUser=auth()->user();
+        if ($authUser->hasType(Sd::$doctorRole)){
+            $acceptedAppointments=$authUser->doctor->appointments()->where('accept_by_doctor', '=', Sd::$accept)->where('accept_by_user', '=', Sd::$accept)->where('date','=',date("Y-m-d"))->get();
+        }
+        else{
+            $acceptedAppointments=$authUser->patient->appointments()->where('accept_by_doctor', '=', Sd::$accept)->where('accept_by_user', '=', Sd::$accept)->where('date','=',date("Y-m-d"))->get();
+        }
         $notifications = auth()->user()->unreadNotifications()->paginate(3);
-        return view('notifications', ['notifications' => $notifications]);
+        return view('notifications', ['notifications' => $notifications,'acceptedAppointments'=>$acceptedAppointments]);
     }
 
     public function acceptReject($decision, $id)
