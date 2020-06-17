@@ -13,17 +13,20 @@ class AppointmentController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('auth');
     }
 
 
     public function index($status='non_ready')
     {
+       // $this->allowedAdminAction();
         $appointments=Appointment::appointment($status)->paginate(2);
         return view('admin',['appointments'=>$appointments,'status'=>$status]);
     }
 
     public function update(UpdateAppointment $request, Appointment $appointment)
     {
+       // $this->allowedAdminAction();
             $appointment->update([
                 'doctor_id'=>$request->doctor,
                 'time'=>$request->time,

@@ -34,5 +34,7 @@ Route::get('/admin/{status}', 'AppointmentController@index');
 Route::get('/admin', 'AppointmentController@index');
 Route::put('/update/appointment/{appointment}', 'AppointmentController@update');
 
-Route::get('/pains/{specialty}', 'PainController@index');
+Route::get('/pains/specialty/{specialty}', 'PainController@pains');
 
+Route::resource('specialties', 'SpecialtyController');
+Route::resource('pains', 'PainController');

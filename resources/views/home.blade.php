@@ -66,7 +66,7 @@
             if (specialty_id) {
                 $.ajax({
                     type: "GET",
-                    url: "/pains/" + specialty_id,
+                    url: "/pains/specialty" + specialty_id,
                     success: function (pains) {
                         $.each(pains, function (key, value) {
                             $('#painsList').append(`<option value='${value.id}'>${value.description}</option>`);

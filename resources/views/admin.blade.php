@@ -2,26 +2,7 @@
 
 @section('content')
     <div class="row">
-    <div class="col-md-2">
-
-        <div class="fixed-section affix" data-spy="affix" data-offset-top="400">
-            <ul style="list-style-type: none">
-
-                <h4 class="bd-toc-link">Appointment Management</h4>
-
-                <li>
-                    <a href="/admin/non_ready">NotReady Appointments</a>
-                </li>
-                <li>
-                    <a href="/admin/waiting">Waiting Appointments</a>
-                </li>
-                <li>
-                    <a href="/admin/reject">Rejected Appointments</a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
+        @include('layouts.sidebar')
     <div class="col-md-10">
         @if (session('message'))
             <div class="alert alert-success " role="alert">
