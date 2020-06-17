@@ -2,7 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
+use App\Appointment;
+use App\Doctor;
+use App\Pain;
+use App\Patient;
+use App\Specialty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use PhpParser\Comment\Doc;
 
 class HomeController extends Controller
 {
@@ -23,10 +31,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $specialties=Specialty::all();
+        return view('home',['specialties'=>$specialties]);
     }
-    public function test()
+    public function RequestAppointment(Request $request)
     {
-        dd(auth()->user());
+        $request->validate(['pain'=>'required']);
+        auth()->user()->appointments()->save(new Appointment(['pain_id'=>$request->pain]));
+        return redirect()->back()->with('message','Your Appointment Request Send Successfully');
     }
+
 }
