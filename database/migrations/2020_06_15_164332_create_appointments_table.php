@@ -20,7 +20,7 @@ class CreateAppointmentsTable extends Migration
                 ->onUpdate('cascade')->onDelete('set null');
             $table->unsignedBigInteger('pain_id')->nullable();
             $table->foreign('pain_id')->references('id')->on('pains')
-                ->onUpdate('cascade')->onDelete('set null');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('user_id')->on('doctors')
                 ->onUpdate('cascade')->onDelete('set null');
