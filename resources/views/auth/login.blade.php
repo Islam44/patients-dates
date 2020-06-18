@@ -8,6 +8,13 @@
                     <div class="card-header"> {{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }}</div>
 
                     <div class="card-body">
+                        <div>
+                            @if (session('message'))
+                                <div class="alert alert-success " role="alert">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+                        </div>
                     <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                        @csrf
                         <div class="form-group row">

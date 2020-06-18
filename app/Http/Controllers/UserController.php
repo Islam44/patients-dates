@@ -40,7 +40,7 @@ class UserController extends Controller
             $request->merge(['user_id' => $user->id]);
             $this->model->create($request->only($this->model->getModel()->fillable));
         });
-        return redirect('/create_appointment')->with('message', 'your form added success');
+        return redirect('/create_appointment')->with('message', 'your Information Is Added');
     }
 
     public function edit()

@@ -51,11 +51,11 @@ class LoginController extends Controller
     protected function authenticated(Request $request, User $user)
     {
         if ($user->hasType(Sd::$doctorRole)) {
-            return redirect('/notifications')->with('message', 'welcome doctor ' . $user->name);
+            return redirect('/notifications')->with('message', 'Welcome Doctor ' . $user->name);
         } else if ($user->hasType(Sd::$adminRole)) {
-            return redirect('/admin')->with('message', 'welcome Admin ' . $user->name);
+            return redirect('/admin')->with('message', 'Welcome Admin ' . $user->name);
         } else {
-            return redirect('/home')->with('message', 'welcome User ' . $user->name);
+            return redirect('/home')->with('message', 'Welcome User ' . $user->name);
 
         }
 

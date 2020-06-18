@@ -17,6 +17,11 @@
                         <div class="row">
                             @if(count($notifications)==0)
                             <div class="col-6">
+                                @if(auth()->user()->hasType('User'))
+                                <p>When doctor reject appointment notification deleted automatically</p>
+                                @else
+                                <p>When patient reject appointment notification deleted automatically</p>
+                                @endif
                                  <h3>Notification List Empty</h3>
                             </div>
                             @else

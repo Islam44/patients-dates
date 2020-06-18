@@ -14,11 +14,10 @@ class CreateDoctorsTable extends Migration
     public function up()
     {
         Schema::create('doctors', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('specialty_id')->nullable();
             $table->foreign('specialty_id')->references('id')->on('specialties')
                 ->onUpdate('cascade')->onDelete('set null');
-             $table->unsignedBigInteger('user_id')->nullable();
+             $table->unsignedBigInteger('user_id')->unique()->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();

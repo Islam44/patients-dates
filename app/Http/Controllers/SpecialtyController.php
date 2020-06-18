@@ -18,7 +18,7 @@ class SpecialtyController extends Controller
 
     public function index()
     {
-        $collection=$this->model->paginate(1);
+        $collection=$this->model->paginate(3);
         return view('specialties.index',['collection'=>$collection]);
 
     }

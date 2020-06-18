@@ -8,6 +8,13 @@
                     <div class="card-header"> {{ isset($url) ? ucwords($url) : ""}} {{ __('Register') }}</div>
 
                     <div class="card-body">
+                        <div>
+                            @if (session('message'))
+                                <div class="alert alert-success " role="alert">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+                        </div>
                         <form method="POST" action="{{ route('complete_register',$user->id) }}"
                               aria-label="{{ __('Register') }}">
                             @csrf
@@ -99,15 +106,20 @@
                             <div class="form-group row">
                                 <label for="gender" class="col-md-4 col-form-label text-md-right">Gender</label>
                                 <div class="col-md-6">
-                                    <select class="form-control " id="DropDownList1" name="gender">
+                                    <select class="form-control @error('gender') is-invalid @enderror" id="DropDownList1" name="gender">
                                         <option value="">Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
+                                    @error('gender')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="gender" class="col-md-4 col-form-label text-md-right">Birthday</label>
+                                <label for="dob" class="col-md-4 col-form-label text-md-right">Birthday</label>
                                 <div class="col-md-6">
                                     <input id="dob" type="date" class="form-control @error('dob') is-invalid @enderror"
                                            name="dob" value="{{ old('dob') }}" required autocomplete="dob" autofocus>

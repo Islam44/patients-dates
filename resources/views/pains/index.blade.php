@@ -25,11 +25,11 @@
                             <td>{{$instance->description}}</td>
                             <td>{{$instance->specialty->name}}</td>
                             <td>
-                                <a href="{{ route('pains.edit',$instance->id)}}" class="btn btn-primary w-25 mb-1">Update</a>
+                                <a href="{{ route('pains.edit',$instance->id)}}" class="btn w-50 mb-1" style=" background-color:#3490dc;color: white">Update</a>
                                 <form action="{{ route('pains.destroy', $instance->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-danger w-25" type="submit">Delete</button>
+                                    <button class="btn btn-danger w-50" type="submit">Delete</button>
                                 </form>
                             </td>
                         </tr>

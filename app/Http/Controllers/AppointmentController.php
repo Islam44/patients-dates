@@ -8,8 +8,10 @@ use App\Notifications\SendNotification;
 use App\Repositories\Repository;
 use App\Sd;
 use App\Specialty;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class AppointmentController extends Controller
 {
@@ -20,8 +22,8 @@ class AppointmentController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('admin', ['except' => ['acceptReject', 'create','store']]);
-        $this->middleware('patient', ['only' => ['acceptReject', 'create','store']]);
-        $this->middleware('doctor', ['only' => ['acceptReject']]);
+        $this->middleware('patient', ['only' => ['create','store']]);
+        $this->middleware('doctorOrPatient', ['only' => ['acceptReject']]);
         $this->model = new Repository($appointment);
         $this->specialtyModel = (new Repository($specialtyModel));
     }
@@ -52,7 +54,7 @@ class AppointmentController extends Controller
         $this->model->update($request->only($this->model->getModel()->fillable), $id);
         $appointment=$this->model->show($id);
         $this->sendNotification($appointment);
-        return redirect()->back()->with('message', 'Appointment Completely Created ');
+        return redirect()->back()->with('message', 'Appointment Completely Updated ');
     }
 
     public function sendNotification($appointment)
@@ -68,11 +70,16 @@ class AppointmentController extends Controller
     {
         DB::transaction(function () use ($decision, $id) {
             $notification = auth()->user()->notifications()->where('id', '=', $id)->first();
+            if ($notification&&$decision==Sd::$reject) {
+                $this->markTwoUsersAsRead($notification);
+            }
+            else{
+                if ($notification){
+                    $notification->markAsRead();
+                }
+            }
             $appointment_id = $notification['data']['appointment']['id'];
             $appointment = $this->model->show($appointment_id);
-            if ($notification) {
-                $notification->markAsRead();
-            }
             if (auth()->user()->hasType(Sd::$userRole)) {
                 $appointment->accept_by_user = $decision;
             } else {
@@ -81,5 +88,23 @@ class AppointmentController extends Controller
             $appointment->save();
         });
         return redirect()->back();
+    }
+
+    private function markTwoUsersAsRead($notification)
+    {
+            $data=$notification->data;
+            $identifier=$data['identifier'];
+            $patient_id=$data['appointment']['patient_id'];
+            $doctor_id=$data['appointment']['doctor_id'];
+            $doctor=User::find($doctor_id);
+            $patient=User::find($patient_id);
+            $DoctorNotification=$doctor->unreadNotifications()->where('identifier', '=', $identifier)->first();
+            if ($DoctorNotification){
+                $DoctorNotification->markAsRead();
+            }
+            $PatientNotification=$patient->unreadNotifications()->where('identifier', '=', $identifier)->first();
+            if ($PatientNotification){
+                $PatientNotification->markAsRead();
+            }
     }
 }

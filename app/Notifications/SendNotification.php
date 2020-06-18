@@ -31,7 +31,7 @@ class SendNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return [CustomNotificationDbChannel::class];
     }
 
     /**
@@ -58,6 +58,13 @@ class SendNotification extends Notification
     {
         return [
             'appointment'=>$this->appointment
+        ];
+    }
+    public function toDatabase($notifiable)
+    {
+        return [
+            'appointment'=>$this->appointment,
+            'identifier'=>$this->appointment->id
         ];
     }
 }

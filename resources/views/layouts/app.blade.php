@@ -78,6 +78,9 @@
                                         <a class="dropdown-item" href="/edit/info">
                                             Update profile
                                         </a>
+                                        <a class="dropdown-item" href="/create_appointment">
+                                            Create Appointment
+                                        </a>
                                     @endif
                                     @if(auth()->user()->hasType('Admin'))
                                         <a class="dropdown-item" href="/register/admin">
