@@ -92,14 +92,12 @@ class AppointmentController extends Controller
 
     private function markTwoUsersAsRead($notification)
     {
-        DB::transaction(function () use($notification){
             $data=$notification->data;
             $identifier=$data['identifier'];
             $patient_id=$data['appointment']['patient_id'];
             $this->markNotificationAsRead($patient_id,$identifier);
             $doctor_id=$data['appointment']['doctor_id'];
             $this->markNotificationAsRead($doctor_id,$identifier);
-        });
     }
 
     private function markNotificationAsRead($id,$identifier)
