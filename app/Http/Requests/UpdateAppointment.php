@@ -24,7 +24,7 @@ class UpdateAppointment extends FormRequest
     public function rules()
     {
         return [
-            'doctor'=>'required',
+            'doctor_id'=>'required',
             'time'=>'required|after:now',
             'date'=>'required|date|before:tomorrow'
         ];

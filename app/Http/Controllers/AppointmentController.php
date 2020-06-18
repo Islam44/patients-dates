@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\Http\Requests\CreateAppointment;
+use App\Http\Requests\UpdateAppointment;
 use App\Notifications\SendNotification;
 use App\Repositories\Repository;
 use App\Sd;
@@ -48,7 +49,7 @@ class AppointmentController extends Controller
         return redirect()->back()->with('message', 'Your Appointment Request Send Successfully');
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAppointment $request, $id)
     {
         $request->merge(['accept_by_user' => Sd::$waiting,'accept_by_doctor'=>Sd::$waiting,'admin_id'=>auth()->id()]);
         $this->model->update($request->only($this->model->getModel()->fillable), $id);
