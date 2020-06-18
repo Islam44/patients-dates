@@ -18,7 +18,7 @@ class CreatePainsTable extends Migration
             $table->string('description');
             $table->unsignedBigInteger('specialty_id')->nullable();
             $table->foreign('specialty_id')->references('id')->on('specialties')
-                ->onUpdate('cascade')->onDelete('set null');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
