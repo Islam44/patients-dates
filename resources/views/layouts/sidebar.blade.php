@@ -19,7 +19,7 @@
                 <a href="/specialties">Specialty Control</a>
             </li>
             <li>
-                <a href="/pains">Pain Management</a>
+                <a href="/pains">Pain Control</a>
             </li>
 
         </ul>

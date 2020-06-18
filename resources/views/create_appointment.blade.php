@@ -57,25 +57,5 @@
         </div>
     </div>
 @endsection
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#specialtyList").change(function (e) {
-            $('#painsList').html("")
-            var specialty_id = $(this).val();
-            if (specialty_id) {
-                $.ajax({
-                    type: "GET",
-                    url: "/pains/specialty/" + specialty_id,
-                    success: function (pains) {
-                        $.each(pains, function (key, value) {
-                            $('#painsList').append(`<option value='${value.id}'>${value.description}</option>`);
-                        });
-                    }
-                })
-            } else {
-                $('#painsList').append('  <option value="">Select Specialty First</option>');
-            }
-        });
-    });
-</script>
+<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+<script src="../js/createAppointment.js" type="text/javascript"></script>

@@ -65,6 +65,7 @@ class PainController extends Controller
         $this->model->delete($id);
         return redirect('pains')->with('message','deleted done');
     }
+
     public function pains(Specialty $specialty)
     {
         return response()->json($specialty->pains);

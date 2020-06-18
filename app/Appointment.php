@@ -8,7 +8,6 @@ class Appointment extends Model
 {
     protected $fillable = ['patient_id', 'pain_id', 'doctor_id', 'time', 'date', 'admin_id','accept_by_doctor','accept_by_user'];
 
-    //
     public function admin()
     {
         return $this->belongsTo(Admin::class, 'admin_id');

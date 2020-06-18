@@ -19,6 +19,7 @@
                 <th>Date</th>
                 <th>Accept by Doctor</th>
                 <th>Accept by Patient</th>
+                <th>Updated By Admin</th>
                 <th>action</th>
 
                 </thead>
@@ -64,6 +65,11 @@
                     </td>
                             <td>{{$appointment->accept_by_doctor}}</td>
                             <td>{{$appointment->accept_by_user}}</td>
+                            @if($appointment->admin)
+                            <td>{{$appointment->admin->name}}</td>
+                            @else
+                                <td></td>
+                            @endif
                             @if($status=='reject')
                              <td> <button type="submit" class="btn btn-primary">Update Appointment</button></td>
                             @else

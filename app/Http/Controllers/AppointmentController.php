@@ -19,8 +19,8 @@ class AppointmentController extends Controller
     public function __construct(Appointment $appointment,Specialty $specialtyModel)
     {
         $this->middleware('auth');
-        $this->middleware('admin', ['except' => ['acceptReject', 'create']]);
-        $this->middleware('patient', ['only' => ['acceptReject', 'create']]);
+        $this->middleware('admin', ['except' => ['acceptReject', 'create','store']]);
+        $this->middleware('patient', ['only' => ['acceptReject', 'create','store']]);
         $this->middleware('doctor', ['only' => ['acceptReject']]);
         $this->model = new Repository($appointment);
         $this->specialtyModel = (new Repository($specialtyModel));
@@ -28,15 +28,17 @@ class AppointmentController extends Controller
 
     public function index($status='non_ready')
     {
-        $appointments=$this->model->filter($status)->paginate(1);
+        $appointments=$this->model->filter($status)->paginate(5);
         return view('admin',['appointments'=>$appointments,'status'=>$status]);
     }
+
     public function create()
     {
         $specialties=$this->specialtyModel->all();
         $notifications = auth()->user()->unreadNotifications()->get();
         return view('create_appointment', ['specialties' => $specialties, 'number' => count($notifications)]);
     }
+
     public function store(CreateAppointment $request)
     {
         $appointment=$this->model->create($request->only($this->model->getModel()->fillable));
@@ -46,7 +48,7 @@ class AppointmentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->merge(['accept_by_user' => Sd::$waiting,'accept_by_doctor'=>Sd::$waiting]);
+        $request->merge(['accept_by_user' => Sd::$waiting,'accept_by_doctor'=>Sd::$waiting,'admin_id'=>auth()->id()]);
         $this->model->update($request->only($this->model->getModel()->fillable), $id);
         $appointment=$this->model->show($id);
         $this->sendNotification($appointment);

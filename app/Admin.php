@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notifiable;
 class Admin extends User
 {
     use Notifiable;
-    protected $primaryKey = 'id';
     protected $table = 'users';
 
     protected static function boot()

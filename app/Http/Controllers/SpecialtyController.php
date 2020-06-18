@@ -34,7 +34,7 @@ class SpecialtyController extends Controller
             'name' => 'required|max:500'
         ]);
         $this->model->create($request->only($this->model->getModel()->fillable));
-        return redirect()->back()->with('message','created done');
+         return redirect()->route('specialties.index')->with('message','created done');
     }
 
     public function show($id)
@@ -50,7 +50,7 @@ class SpecialtyController extends Controller
     public function update(Request $request, $id)
     {
         $this->model->update($request->only($this->model->getModel()->fillable), $id);
-        return redirect()->back()->with('message','updated done');
+        return redirect()->route('specialties.index')->with('message','updated done');
     }
 
     public function destroy($id)

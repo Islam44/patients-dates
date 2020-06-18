@@ -10,31 +10,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <style>
-        .dot {
-            height: 15px;
-            width: 15px;
-            background-color: red;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .sec {
-            position: relative;
-            right: -13px;
-            top: -22px;
-        }
-
-        .counter.counter-lg {
-            top: -24px !important;
-        }
-
-
-    </style>
-
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $(".alert").slideDown(300).delay(2000).slideUp(300);
@@ -96,9 +74,16 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-                                    <a class="dropdown-item" href="/edit/info">
-                                        Update profile
-                                    </a>
+                                    @if(auth()->user()->hasType('User'))
+                                        <a class="dropdown-item" href="/edit/info">
+                                            Update profile
+                                        </a>
+                                    @endif
+                                    @if(auth()->user()->hasType('Admin'))
+                                        <a class="dropdown-item" href="/register/admin">
+                                            Register New Admin
+                                        </a>
+                                    @endif
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf

@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Facade\Ignition\Exceptions\ViewException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -51,8 +53,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        if ($exception instanceof HttpException) {
+            return response()->view('error', ['message' =>'The page was not found on this server','code'=>404]);
+        }
+        if (config('app.debug')) {
+            return parent::render($request, $exception);
+        }
+            return response()->view('error', ['message' =>'Unexpected . Try later','code'=>500]);
+
     }
+
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {

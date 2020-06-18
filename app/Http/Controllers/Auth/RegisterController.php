@@ -48,7 +48,8 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest',['except'=>['showAdminRegisterForm','createAdmin']]);
+        $this->middleware(['auth','admin'],['only'=>['showAdminRegisterForm','createAdmin']]);
     }
 
     /**
@@ -80,14 +81,13 @@ class RegisterController extends Controller
     protected function createAdmin(CreateAdminRequest $request)
     {
         $type = User_type::where('role', '=', Sd::$adminRole)->first();
-        $admin = Admin::create([
+        $admin = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
             'type_id' => $type->id
         ]);
-
-        return redirect()->intended('/')->with('Admin Created Successfully');
+        return redirect('/admin')->with('message','Admin Created Successfully');
     }
 
     protected function createDoctor(CreateDoctorRequest $request)
@@ -105,7 +105,7 @@ class RegisterController extends Controller
                 'user_id' => $user->id
             ]);
         });
-        return redirect()->intended('/login');
+        return redirect('/login')->with('message','Doctor Created Successfully Please Login');
     }
 
     /**
@@ -124,15 +124,13 @@ class RegisterController extends Controller
         ]);
 
     }
+
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
         $this->guard()->login($user);
-
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
-        //return redirect($this->redirectPath().'/'.$user->id);
+        return redirect($this->redirectPath());
     }
 
 }
