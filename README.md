@@ -31,3 +31,7 @@ Run server
 ```
 $ php artisan serve
 ```
+Admin Email and Password
+email : admin@gmail.com
+password : 123456789
+```
