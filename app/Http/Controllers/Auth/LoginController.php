@@ -40,6 +40,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
     public function username()
     {
         $login = request()->login;
@@ -58,7 +59,5 @@ class LoginController extends Controller
             return redirect('/home')->with('message', 'Welcome User ' . $user->name);
 
         }
-
     }
-
-    }
+}

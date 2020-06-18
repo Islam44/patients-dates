@@ -92,19 +92,22 @@ class AppointmentController extends Controller
 
     private function markTwoUsersAsRead($notification)
     {
+        DB::transaction(function () use($notification){
             $data=$notification->data;
             $identifier=$data['identifier'];
             $patient_id=$data['appointment']['patient_id'];
+            $this->markNotificationAsRead($patient_id,$identifier);
             $doctor_id=$data['appointment']['doctor_id'];
-            $doctor=User::find($doctor_id);
-            $patient=User::find($patient_id);
-            $DoctorNotification=$doctor->unreadNotifications()->where('identifier', '=', $identifier)->first();
-            if ($DoctorNotification){
-                $DoctorNotification->markAsRead();
-            }
-            $PatientNotification=$patient->unreadNotifications()->where('identifier', '=', $identifier)->first();
-            if ($PatientNotification){
-                $PatientNotification->markAsRead();
-            }
+            $this->markNotificationAsRead($doctor_id,$identifier);
+        });
+    }
+
+    private function markNotificationAsRead($id,$identifier)
+    {
+        $user=User::find($id);
+        $notification=$user->unreadNotifications()->where('identifier', '=', $identifier)->first();
+        if ($notification){
+            $notification->markAsRead();
+        }
     }
 }
