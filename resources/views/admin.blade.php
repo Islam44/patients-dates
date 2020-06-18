@@ -30,7 +30,7 @@
                             @METHOD('PUT')
                     <td>{{$appointment->patient->first_name}} {{$appointment->patient->last_name}}</td>
                     <td>{{$appointment->pain->description}}</td>
-                    <td>   <select id="doctor" class="form-control @error('doctor') is-invalid @enderror" id="painsList" name="doctor">
+                    <td>   <select id="doctor_id" class="form-control @error('doctor') is-invalid @enderror" id="painsList" name="doctor_id">
                             @if($appointment->doctor_id)
                                 <option value="{{$appointment->doctor_id}}">{{$appointment->doctor->user->name}}</option>
                             @else
@@ -40,7 +40,7 @@
                                 <option value="{{$doctor->user_id}}">{{$doctor->user->name}}</option>
                             @endforeach
                         </select>
-                        @error('doctor')
+                        @error('doctor_id')
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateAppointment extends FormRequest
+class UpdateInfoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,12 @@ class CreateAppointment extends FormRequest
     public function rules()
     {
         return [
-            'pain_id'=>'required'
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$this->user()->id,
+            'mobile'=> 'required|min:11|numeric',
+            'gender'=> 'required',
+            'dob'=> 'required'
         ];
     }
 }

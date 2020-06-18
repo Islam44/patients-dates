@@ -2,7 +2,6 @@
 namespace App\Repositories;
 use App\Repositories\IRepositories\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Expr\AssignOp\Mod;
 
 class Repository implements RepositoryInterface{
     protected $model;
@@ -48,9 +47,18 @@ class Repository implements RepositoryInterface{
         $this->model = $model;
         return $this;
     }
-    
+
     public function paginate(int $perPage)
     {
        return $this->model->paginate($perPage);
+    }
+    public function filter(string $filter)
+    {
+        return $this->model->filter($filter);
+    }
+
+    public function with($relations)
+    {
+        return $this->model->with($relations);
     }
 }

@@ -22,13 +22,15 @@ Route::get('/register/admin', 'Auth\RegisterController@showAdminRegisterForm');
 Route::get('/register/doctor', 'Auth\RegisterController@showDoctorRegisterForm');
 Route::post('/register/admin', 'Auth\RegisterController@createAdmin');
 Route::post('/register/doctor', 'Auth\RegisterController@createDoctor');
-Route::get('/complete-register/{user}', 'Auth\RegisterController@showCompleteRegisterForm');
-Route::post('/completeRegister/{user}', 'Auth\RegisterController@completeRegister')->name('complete_register');
+Route::post('/completeRegister', 'UserController@store')->name('complete_register');
 
-Route::get('/home', 'HomeController@index');
-Route::get('/notifications', 'HomeController@notifications');
-Route::get('/decision/{decision}/{id}', 'HomeController@acceptReject');
-Route::post('/request', 'HomeController@RequestAppointment')->name('request_appointment');
+Route::get('/home', 'UserController@index');
+Route::get('/edit/info', 'UserController@edit');
+Route::put('/update/info', 'UserController@update');
+Route::get('/create_appointment', 'AppointmentController@create');
+Route::get('/notifications', 'UserController@notifications');
+Route::get('/decision/{decision}/{id}', 'UserController@acceptReject');
+Route::post('/request', 'AppointmentController@store')->name('request_appointment');
 
 Route::get('/admin/{status}', 'AppointmentController@index');
 Route::get('/admin', 'AppointmentController@index');

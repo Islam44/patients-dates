@@ -6,7 +6,6 @@ use App\Pain;
 use App\Repositories\Repository;
 use App\Specialty;
 use Illuminate\Http\Request;
-use function GuzzleHttp\Promise\all;
 
 class PainController extends Controller
 {
@@ -66,9 +65,6 @@ class PainController extends Controller
     }
     public function pains(Specialty $specialty)
     {
-        $pains=$specialty->pains;
-        if (\request()->ajax()){
-            return response()->json($pains);
-        }
+        return response()->json($specialty->pains);
     }
 }

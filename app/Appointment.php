@@ -29,7 +29,7 @@ class Appointment extends Model
         return $this->belongsTo(Pain::class);
     }
 
-    public function scopeAppointment($query, $statue)
+    public function scopeFilter($query, $statue)
     {
         return $query->where('accept_by_doctor', '=', $statue)->Orwhere('accept_by_user', '=', $statue);
     }

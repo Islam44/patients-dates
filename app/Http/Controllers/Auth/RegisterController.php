@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Admin;
 use App\Doctor;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CompleteRegisterRequest;
 use App\Http\Requests\CreateAdminRequest;
 use App\Http\Requests\CreateDoctorRequest;
-use App\Patient;
+use App\Providers\RouteServiceProvider;
 use App\Sd;
 use App\Specialty;
 use App\User;
@@ -16,7 +15,6 @@ use App\User_type;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -41,7 +39,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/complete-register';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -130,28 +128,11 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
         event(new Registered($user = $this->create($request->all())));
-        return redirect($this->redirectPath().'/'.$user->id);
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+        //return redirect($this->redirectPath().'/'.$user->id);
     }
 
-    public function showCompleteRegisterForm(User $user)
-    {
-        return view('auth.complete-register')->with(['user' => $user]);
-    }
-
-    public function completeRegister(CompleteRegisterRequest $request, User $user)
-    {
-        $user->update(['email' => $request->email]);
-        Patient::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'mobile' => $request->mobile,
-            'country' => $request->country,
-            'dob' => $request->dob,
-            'job' => $request->job,
-            'gender' => $request->gender,
-            'user_id' => $user->id
-        ]);
-        Auth::login($user);
-        return redirect('/home')->with('message','your form added success');
-    }
 }

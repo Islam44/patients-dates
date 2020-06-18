@@ -3,38 +3,69 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\Http\Requests\CompleteRegisterRequest;
 use App\Http\Requests\CreateAppointment;
+use App\Http\Requests\UpdateInfoRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Pain;
+use App\Patient;
+use App\Repositories\Repository;
 use App\Sd;
 use App\Specialty;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class UserController extends Controller
 {
+    protected $model;
 
-    public function __construct()
+    public function __construct(Patient $patient)
     {
-       $this->middleware('auth');
+        $this->middleware('auth');
+        $this->model = new Repository($patient);
     }
 
     public function index()
     {
-       // $this->allowedPatientAction();
-        $specialties = Specialty::all();
-        $notifications = auth()->user()->unreadNotifications()->get();
-        return view('home', ['specialties' => $specialties, 'number' => count($notifications)]);
+        $user = Auth::user();
+        if ($user->email) {
+            return redirect('/create_appointment');
+        }
+        return view('home',['user'=>$user]);
     }
 
-    public function RequestAppointment(CreateAppointment $request)
+    public function store(CompleteRegisterRequest $request)
     {
-       // $this->allowedPatientAction();
-        auth()->user()->appointments()->save(new Appointment(['pain_id' => $request->pain]));
-        return redirect()->back()->with('message', 'Your Appointment Request Send Successfully');
+        DB::transaction(function () use($request){
+            $user = Auth::user();
+            $user->update(['email' => $request->email]);
+            $request->merge(['user_id' => $user->id]);
+            $this->model->create($request->only($this->model->getModel()->fillable));
+        });
+        return redirect('/create_appointment')->with('message', 'your form added success');
     }
+
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('edit_info', ['user' => $user]);
+    }
+
+    public function update(UpdateInfoRequest $request)
+    {
+        DB::transaction(function ()use($request){
+            $user = Auth::user();
+            $user->update(['email' => $request->email]);
+            $this->model->update($request->only($this->model->getModel()->fillable), $user->id);
+        });
+        return redirect('/create_appointment')->with('message', 'Profile updated done');
+
+    }
+
+
 
     public function notifications()
     {
-       // $this->allowedPatientAction();
-       // $this->allowedDoctorAction();
         $authUser=auth()->user();
         if ($authUser->hasType(Sd::$doctorRole)){
             $acceptedAppointments=$authUser->doctor->appointments()->where('accept_by_doctor', '=', Sd::$accept)->where('accept_by_user', '=', Sd::$accept)->where('date','=',date("Y-m-d"))->get();
@@ -48,8 +79,6 @@ class HomeController extends Controller
 
     public function acceptReject($decision, $id)
     {
-       // $this->allowedPatientAction();
-       // $this->allowedDoctorAction();
         DB::transaction(function () use ($decision, $id) {
             $notification = auth()->user()->notifications()->where('id', '=', $id)->first();
             $appointment_id = $notification['data']['appointment']['id'];
