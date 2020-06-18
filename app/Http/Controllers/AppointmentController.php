@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\Http\Requests\CreateAppointment;
-use App\Http\Requests\UpdateAppointment;
 use App\Notifications\SendNotification;
-use App\Pain;
-use App\Patient;
 use App\Repositories\Repository;
 use App\Sd;
 use App\Specialty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -20,8 +18,12 @@ class AppointmentController extends Controller
 
     public function __construct(Appointment $appointment,Specialty $specialtyModel)
     {
+        $this->middleware('auth');
+        $this->middleware('admin', ['except' => ['acceptReject', 'create']]);
+        $this->middleware('patient', ['only' => ['acceptReject', 'create']]);
+        $this->middleware('doctor', ['only' => ['acceptReject']]);
         $this->model = new Repository($appointment);
-        $this->specialtyModel=(new Repository($specialtyModel));
+        $this->specialtyModel = (new Repository($specialtyModel));
     }
 
     public function index($status='non_ready')
@@ -48,14 +50,34 @@ class AppointmentController extends Controller
         $this->model->update($request->only($this->model->getModel()->fillable), $id);
         $appointment=$this->model->show($id);
         $this->sendNotification($appointment);
-        return  redirect()->back()->with('message','Appointment Completely Created ');
+        return redirect()->back()->with('message', 'Appointment Completely Created ');
     }
 
-    public function sendNotification($appointment){
-        $notification=new SendNotification($appointment);
-        $doctor=$appointment->doctor->user;
-        $patient=$appointment->patient->user;
+    public function sendNotification($appointment)
+    {
+        $notification = new SendNotification($appointment);
+        $doctor = $appointment->doctor->user;
+        $patient = $appointment->patient->user;
         $doctor->notify($notification);
         $patient->notify($notification);
+    }
+
+    public function acceptReject($decision, $id)
+    {
+        DB::transaction(function () use ($decision, $id) {
+            $notification = auth()->user()->notifications()->where('id', '=', $id)->first();
+            $appointment_id = $notification['data']['appointment']['id'];
+            $appointment = $this->model->show($appointment_id);
+            if ($notification) {
+                $notification->markAsRead();
+            }
+            if (auth()->user()->hasType(Sd::$userRole)) {
+                $appointment->accept_by_user = $decision;
+            } else {
+                $appointment->accept_by_doctor = $decision;
+            }
+            $appointment->save();
+        });
+        return redirect()->back();
     }
 }

@@ -76,22 +76,26 @@
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
+    <div class="flex-center position-ref full-height">
+        @if (Route::has('login'))
+            <div class="top-right links">
+                @auth
+                    @if(auth()->user()->hasType('Admin'))
+                        <a href="{{ url('/admin') }}">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ url('/notifications') }}">My Appointments</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}">Login</a>
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                        <a href="/register/doctor">Register As Doctor</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}">Register</a>
+                    @endif
+                    <a href="/register/doctor">Register As Doctor</a>
 
-                    @endauth
+                @endauth
 
-                </div>
+            </div>
             @endif
             <div class="content">
                 <div>

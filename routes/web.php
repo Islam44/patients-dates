@@ -29,7 +29,7 @@ Route::get('/edit/info', 'UserController@edit');
 Route::put('/update/info', 'UserController@update');
 Route::get('/create_appointment', 'AppointmentController@create');
 Route::get('/notifications', 'UserController@notifications');
-Route::get('/decision/{decision}/{id}', 'UserController@acceptReject');
+Route::get('/decision/{decision}/{id}', 'AppointmentController@acceptReject');
 Route::post('/request', 'AppointmentController@store')->name('request_appointment');
 
 Route::get('/admin/{status}', 'AppointmentController@index');

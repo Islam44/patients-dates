@@ -16,9 +16,9 @@ class IsPatient
      */
     public function handle($request, Closure $next)
     {
-        if(auth()->user()->hasType(Sd::$userRole)) {
-            return $next($request);
+        if ($request->user() && !$request->user()->hasType(Sd::$userRole)) {
+            return Response(view('error')->with(['message' => 'You Dont Has Permission To Access This URl', 'code' => 403]));
         }
-        return redirect('/')->with('message','You Dont Has Permission To Access This URl');
+        return $next($request);
     }
 }

@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Appointment;
 use App\Http\Requests\CompleteRegisterRequest;
-use App\Http\Requests\CreateAppointment;
 use App\Http\Requests\UpdateInfoRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use App\Pain;
 use App\Patient;
 use App\Repositories\Repository;
 use App\Sd;
-use App\Specialty;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +18,8 @@ class UserController extends Controller
     public function __construct(Patient $patient)
     {
         $this->middleware('auth');
+        $this->middleware('patient');
+        $this->middleware('doctor', ['only' => ['notifications']]);
         $this->model = new Repository($patient);
     }
 
@@ -62,8 +60,6 @@ class UserController extends Controller
 
     }
 
-
-
     public function notifications()
     {
         $authUser=auth()->user();
@@ -75,24 +71,5 @@ class UserController extends Controller
         }
         $notifications = auth()->user()->unreadNotifications()->paginate(3);
         return view('notifications', ['notifications' => $notifications,'acceptedAppointments'=>$acceptedAppointments]);
-    }
-
-    public function acceptReject($decision, $id)
-    {
-        DB::transaction(function () use ($decision, $id) {
-            $notification = auth()->user()->notifications()->where('id', '=', $id)->first();
-            $appointment_id = $notification['data']['appointment']['id'];
-            $appointment = Appointment::find($appointment_id);
-            if ($notification) {
-                $notification->markAsRead();
-            }
-            if (auth()->user()->hasType(Sd::$userRole)) {
-                $appointment->accept_by_user = $decision;
-            } else {
-                $appointment->accept_by_doctor = $decision;
-            }
-            $appointment->save();
-        });
-        return redirect()->back();
     }
 }

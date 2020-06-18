@@ -14,8 +14,10 @@ class PainController extends Controller
 
     public function __construct(Pain $pain,Specialty $specialtyModel)
     {
+        $this->middleware('auth');
+        $this->middleware('admin', ['except' => ['pains']]);
         $this->model = new Repository($pain);
-        $this->specialtyModel=(new Repository($specialtyModel));
+        $this->specialtyModel = (new Repository($specialtyModel));
     }
 
     public function index()
