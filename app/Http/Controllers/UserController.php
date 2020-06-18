@@ -18,8 +18,8 @@ class UserController extends Controller
     public function __construct(Patient $patient)
     {
         $this->middleware('auth');
-        $this->middleware('patient');
-        $this->middleware('doctor', ['only' => ['notifications']]);
+        $this->middleware('patient',['except'=>['notifications']]);
+        $this->middleware('doctorOrPatient', ['only' => ['notifications']]);
         $this->model = new Repository($patient);
     }
 

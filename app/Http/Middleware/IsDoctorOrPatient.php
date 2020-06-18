@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Sd;
 use Closure;
 
-class IsAdmin
+class IsDoctorOrPatient
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()&&$request->user()->hasType(Sd::$adminRole)) {
+        if ($request->user() && ($request->user()->hasType(Sd::$doctorRole) ||$request->user()->hasType(Sd::$userRole))){
             return $next($request);
         }
         return Response(view('error')->with(['message' => 'You Dont Has Permission To Access This URl', 'code' => 403]));

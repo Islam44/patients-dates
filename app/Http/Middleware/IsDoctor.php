@@ -16,9 +16,9 @@ class IsDoctor
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user() && !$request->user()->hasType(Sd::$doctorRole)) {
-            return Response(view('error')->with(['message' => 'You Dont Has Permission To Access This URl', 'code' => 403]));
+        if ($request->user()&&$request->user()->hasType(Sd::$doctorRole)){
+            return $next($request);
         }
-        return $next($request);
+        return Response(view('error')->with(['message' => 'You Dont Has Permission To Access This URl', 'code' => 403]));
     }
 }
