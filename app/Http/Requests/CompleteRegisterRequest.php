@@ -28,8 +28,8 @@ class CompleteRegisterRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'email' => 'string|email|max:255|unique:users',
             'mobile'=> 'required|min:11|numeric',
-            'gender'=> 'required',
-            'dob'=> 'required'
+            'gender'=> 'required|in:male,female',
+            'dob'=> 'date|required'
         ];
     }
 }
