@@ -11,7 +11,7 @@ class Pain extends Model
     public function specialty(){
         return $this->belongsTo(Specialty::class);
     }
-    
+
     public function appointments(){
         return $this->hasMany(Appointment::class,'pain_id');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Repository;
 use App\Specialty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SpecialtyController extends Controller
 {
@@ -55,7 +56,15 @@ class SpecialtyController extends Controller
 
     public function destroy($id)
     {
-         $this->model->delete($id);
+        DB::transaction(function () use ($id){
+            $specialty=$this->model->show($id);
+            $thisAppoinments=$specialty->pains()->with('appointments')->get()->pluck('appointments')->collapse();
+            foreach ($thisAppoinments as $appoinment){
+                $appoinment->delete();
+                DB::table('notifications')->where('identifier','=',$appoinment->id)->delete();
+            }
+            $this->model->delete($id);
+        });
          return redirect()->back()->with('message','deleted done');
     }
 }
