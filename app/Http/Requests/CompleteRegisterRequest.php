@@ -27,7 +27,7 @@ class CompleteRegisterRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'string|email|max:255|unique:users',
-            'mobile'=> 'required|min:11|numeric',
+            'mobile'=> 'required|max:12|numeric',
             'gender'=> 'required|in:male,female',
             'dob'=> 'date|required'
         ];
