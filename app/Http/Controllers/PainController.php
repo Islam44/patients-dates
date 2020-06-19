@@ -6,6 +6,7 @@ use App\Pain;
 use App\Repositories\Repository;
 use App\Specialty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PainController extends Controller
 {
@@ -62,7 +63,11 @@ class PainController extends Controller
 
     public function destroy($id)
     {
-        $this->model->delete($id);
+        DB::transaction(function () use ($id){
+            $pain=$this->model->show($id);
+            DB::table('notifications')->whereIn('identifier',$pain->appointments)->delete();
+            $this->model->delete($id);
+        });
         return redirect('pains')->with('message','deleted done');
     }
 
